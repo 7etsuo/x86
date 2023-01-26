@@ -1,4 +1,4 @@
-# 80x86 Instruction Cheatsheet
+# x86 Instruction Cheatsheet
 
 - snowcra5h@icloud.com
 
