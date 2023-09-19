@@ -1,851 +1,617 @@
-# x86 Instruction Cheatsheet
+## Assembly Instructions Guide
 
-- snowcra5h@icloud.com
+Author: **snowcra5h**  
+📧 [Email](mailto:snowcra5h@icloud.com) | 🐦 [Twitter](https://twitter.com/snowcra5h)
 
-*Explanations for x86 assembly instructions sourced from [Barry B. Brey's website](http://spike.scu.edu.au/~barry/) on January 26, 2023.*
+## Contents
+1. [Abbreviations](#abbreviations)
+   - [Meaning of Assembly Abbreviations](#meaning-of-assembly-abbreviations)
+   - [Example Usage of Assembly Abbreviations](#example-usage-of-assembly-abbreviations)
+2. [Assembly Mnemonics](#assembly-mnemonics)
+   - [Description of x86 Assembly Instructions](#description-of-x86-assembly-instructions)
+3. [Jxx - Jump Instructions Table](#jxx-jump-instructions-table)
+   - [Jump Condition Meanings for Assembly](#jump-condition-meanings-for-assembly)
+4. [Instructions](#instructions)
 
----
+### 1. Abbreviations <a name="abbreviations"></a>
+#### Meaning of Assembly Abbreviations
 
-| Abreviation | Meaning              | Example        |
-| ----------- | -------------------- | -------------- |
-| 1           | the value 1          | SAL AX,1       |
-| #accum       | register AX          | MOV AX,23      |
-| #CL          | the register CL      | SAL AX,CL      |
-| #immed       | a value              | MOV AX,2345    |
-| #immed8      | an 8 bit value       | MOV AX,23      |
-| #mem         | byte or word address | MOV AX,lab1    |
-| #mem8        | byte address         | MOV AX,lab1    |
-| #mem16       | word address         | MOV AX,lab1    |
-| #reg         | 8 or 16 bit register | AX, DH,...     |
-| #reg8        | 8 bit register       | AH, AL, ...    |
-| #reg16       | 16 bit register      | AX,BX, ...     |
-| #segreg      | segment registers    | CS, DS, SS, ES |
+| Abbreviation | Meaning              |
+| ------------ | -------------------- |
+| 1            | the value 1          |
+| accum        | register AX          |
+| CL           | the register CL      |
+| immed        | a value              |
+| immed8       | an 8 bit value       |
+| mem          | byte or word address |
+| mem8         | byte address         |
+| mem16        | word address         |
+| reg          | 8 or 16 bit register |
+| reg8         | 8 bit register       |
+| reg16        | 16 bit register      |
+| segreg       | segment registers    |
 
----
+#### Example Usage of Assembly Abbreviations
 
-| Mnemonic | description              |
+| Abbreviation | Example        |
+| ------------ | -------------- |
+| 1            | SAL AX,1       |
+| accum        | MOV AX,23      |
+| CL           | SAL AX,CL      |
+| immed        | MOV AX,2345    |
+| immed8       | MOV AX,23      |
+| mem          | MOV AX,lab1    |
+
+### 2. Assembly Mnemonics <a name="assembly-mnemonics"></a>
+#### Description of x86 Assembly Instructions
+
+| Mnemonic | Description              |
 | -------- | ------------------------ |
-| #ADC     | - Add With Carry         | 
-| #ADD     | - Add                    |
-| #AND     | - Logical And            |
-| #CALL    | - Subroutine Call        |
-| #CBW     | - Convert Byte to Word   |
-| #CLC     | - Clear Carry Flag       |
-| #CLD     | - Clear Direction Flag   |
-| #CLI     | - Clear Interrupt Flag   |
-| #CMC     | - Complement Carry Flag  |
-| #CMP     | - Compare                |
-| #CMPS    | - Compare String         |
-| #CWD     | - Convert Word to Double |
-| #DEC     | - Decrement              |
-| #DIV     | - Divide                 |
-| #HALT    | - Halt CPU               |
-| #IDIV    | - Signed Division        |
-| #IMUL    | - Signed Multiply        |
-| #IN      | - Input from port        |
-| #INC     | - Increment              |
-| #INS     | - Input String           |
-| #INT     | - Interrupt              |
-| #INTO    | - Interrupt on Overflow  |
-| #IRET    | - Interrupt Return       |
-| #Jxx     | - Conditional Jump       |
-| #JCXZ    | - Jump CX Zero           |
-| #JMP     | - unconditional Jump     |
-| #LDS     | - Load Pointer (DS)      |
-| #LEA     | - Load Effective Address |
-| #LES     | - Load Pointer (ES)      |
-| #LODS    | - Load String            |
-| #LOOP    | - Loop                   |
-| #LOOPE   | - Loop on Equal          |
-| #LOOPNZ  | - Loop Non Zero          |
-| #MOV     | - Move                   |
-| #MOVS    | - Move string            |
-| #MUL     | - Multiply               |
-| #NEG     | - Negation               |
-| #NOP     | - No-operation           |
-| #NOT     | - Logical NOT            |
-| #OR      | - Logical OR             |
-| #OUT     | - Ooutput to port        |
-| #OUTS    | - Output String          |
-| #POP     | - Pop from stack         |
-| #POPA    | - Pop all registers      |
-| #POPF    | - Pop Flags              |
-| #PUSH    | - Push onto stack        |
-| #PUSHA   | - Push all flags         |
-| #PUSHF   | - Push Flags             |
-| #RCL     | - Rotate Left (carry)    |
-| #RCR     | - Rotate Carry (right)   |
-| #REP     | - Repeat instruction     |
-| #REPE    | - Repeat Equal           |
-| #REPNE   | - Repeat Not Equal       |
-| #RET     | - Subroutine return      |
-| #ROL     | - Rotate Left            |
-| #ROR     | - Rotate Right           |
-| #SAL     | - Shift Left             |
-| #SAR     | - Shift Right            |
-| #SBB     | - Subtract with carry    |
-| #SCAS    | - Scan String            |
-| #SHL     | - Shift Left             |
-| #STC     | - Set Carry flag         |
-| #STD     | - Set Direction flag     |
-| #STI     | - Set Interrupt flag     |
-| #STOS    | - Store String           |
-| #SUB     | - Subtract               |
-| #TEST    | - Test bits              |
-| #XCHG    | - exchange values        |
-| #XOR     | - Logical Exclusive OR   |
+| ADC      | Add With Carry           |
+| ADD      | Arithmetic Addition      |
+| AND      | Logical And              |
+| CALL     | Procedure Call           |
+| CBW      | Convert Byte to Word     |
+| CLC      | Clear Carry              |
+| CLD      | Clear Direction Flag     |
+| CLI      | Clear Interrupt Flag     |
+| CMC      | Complement Carry Flag    |
+| CMP      | Compare                  |
+| CMPS     | Compare String           |
+| CWD      | Convert Word to Double   |
+| DEC      | Decrement                |
+| DIV      | Divide                   |
+| HLT      | Halt CPU                 |
+| IDIV     | Signed Integer Division  |
+| IMUL     | Signed Multiply          |
+| IN       | Input Byte or Word From Port |
+| INC      | Increment                |
+| INS      | Input String from Port   |
+| INT      | Interrupt                |
+| INTO     | Interrupt on Overflow    |
+| IRET     | Interrupt Return         |
+| JCXZ     | Jump if Register CX is Zero |
+| JMP      | Unconditional Jump       |
+| LDS      | Load Pointer Using DS    |
+| LEA      | Load Effective Address   |
+| LES      | Load Pointer Using ES    |
+| LODS     | Load String              |
+| LOOP     | Decrement CX and Loop    |
+| LOOPE    | Loop While Equal         |
+| LOOPNZ   | Loop While Not Zero      |
+| MOV      | Move Byte or Word        |
+| MOVS     | Move String              |
+| MUL      | Unsigned Multiply        |
+| NEG      | Two's Complement Negation |
+| NOP      | No Operation             |
+| NOT      | One's Compliment Negation |
+| OR       | Inclusive Logical OR     |
+| OUT      | Output Data to Port      |
+| OUTS     | Output String to Port    |
+| POP      | Pop Word off Stack       |
+| POPA     | Pop All Registers off Stack |
+| POPF     | Pop Flags off Stack      |
+| PUSH     | Push Word onto Stack     |
+| PUSHA    | Push All Registers onto Stack |
+| PUSHF    | Push Flags onto Stack    |
+| RCL      | Rotate Through Carry Left |
+| RCR      | Rotate Through Carry Right |
+| REP      | Repeat String Operation  |
+| REPE     | Repeat Equal             |
+| REPNE    | Repeat Not Equal         |
+| RET      | Return From Procedure    |
+| ROL      | Rotate Left              |
+| ROR      | Rotate Right             |
+| SAL      | Shift Arithmetic Left    |
+| SAR      | Shift Arithmetic Right   |
+| SBB      | Subtract with Borrow     |
+| SCAS     | Scan String              |
+| SHL      | Shift Logical Left       |
+| STC      | Set Carry                |
+| STD      | Set Direction Flag       |
+| STI      | Set Interrupt Flag       |
+| STOS     | Store String             |
+| SUB      | Subtract                 |
+| TEST     | Test For Bit Pattern     |
+| XCHG     | Exchange Register/Memory with Register |
+| XLAT     | Translate Byte in AL Using Table in Memory |
+| XOR      | Exclusive OR             |
 
----
+### 3. Jxx - Jump Instructions Table <a name="jxx-jump-instructions-table"></a>
+#### Jump Condition Meanings for Assembly
 
-***Jxx - Jump Instructions Table***
+| Mnemonic | Meaning Jump Condition |
+| -------- | ---------------------- |
+| JA       | Jump if Above CF=0 and ZF=0 |
+| JAE      | Jump if Above or Equal CF=0 |
+| JB       | Jump if Below CF=1    |
+| JBE      | Jump if Below or Equal CF=1 or ZF=1 |
+| JC       | Jump if Carry CF=1    |
+| JCXZ     | Jump if CX Zero CX=0  |
+| JE       | Jump if Equal ZF=1    |
+| JG       | Jump if Greater ZF=0 and SF=OF |
+| JGE      | Jump if Greater or Equal SF=OF |
+| JL       | Jump if Less SF != OF |
+| JLE      | Jump if Less or Equal ZF=1 or SF != OF |
+| JMP      | Unconditional Jump    |
+| JNA      | Jump if Not Above CF=1 or ZF=1 |
+| JNAE     | Jump if Not Above or Equal CF=1 |
+| JNB      | Jump if Not Below CF=0 |
+| JNBE     | Jump if Not Below or Equal CF=0 and ZF=0 |
+| JNC      | Jump if Not Carry CF=0 |
+| JNE      | Jump if Not Equal ZF=0 |
+| JNG      | Jump if Not Greater ZF=1 or SF != OF |
+| JNGE     | Jump if Not Greater or Equal SF != OF |
+| JNL      | Jump if Not Less SF=OF |
+| JNLE     | Jump if Not Less or Equal ZF=0 and SF=OF |
+| JNO      | Jump if Not Overflow OF=0 |
+| JNP      | Jump if No Parity PF=0 |
+| JNS      | Jump if Not Signed SF=0 |
+| JNZ      | Jump if Not Zero ZF=0 |
+| JO       | Jump if Overflow OF=1 |
+| JP       | Jump if Parity PF=1   |
+| JPE      | Jump if Parity Even PF=1 |
+| JPO      | Jump if Parity Odd PF=0 |
+| JS       | Jump if Signed SF=1   |
+| JZ       | Jump if Zero ZF=1     |
 
-| Mnemonic | Meaning Jump Condition                            |
-| -------- | ------------------------------------------------- |
-| #JA      | Jump if Above CF=0 and ZF=0                       |
-| #JAE     | Jump if Above or Equal CF=0                       |
-| #JB      | Jump if Below CF=1                                |
-| #JBE     | Jump if Below or Equal CF=1 or ZF=1               |
-| #JC      | Jump if Carry CF=1                                |
-| #JCXZ    | Jump if CX Zero CX=0                              |
-| #JE      | Jump if Equal ZF=1                                |
-| #JG      | Jump if Greater (signed) ZF=0 and SF=OF           |
-| #JGE     | Jump if Greater or Equal (signed) SF=OF           |
-| #JL      | Jump if Less (signed) SF != OF                    |
-| #JLE     | Jump if Less or Equal (signed) ZF=1 or SF != OF   |
-| #JMP     | Unconditional Jump unconditional                  |
-| #JNA     | Jump if Not Above CF=1 or ZF=1                    |
-| #JNAE    | Jump if Not Above or Equal CF=1                   |
-| #JNB     | Jump if Not Below CF=0                            |
-| #JNBE    | Jump if Not Below or Equal CF=0 and ZF=0          |
-| #JNC     | Jump if Not Carry CF=0                            |
-| #JNE     | Jump if Not Equal ZF=0                            |
-| #JNG     | Jump if Not Greater (signed) ZF=1 or SF != OF     |
-| #JNGE    | Jump if Not Greater or Equal (signed) SF != OF    |
-| #JNL     | Jump if Not Less (signed) SF=OF                   |
-| #JNLE    | Jump if Not Less or Equal (signed) ZF=0 and SF=OF |
-| #JNO     | Jump if Not Overflow (signed) OF=0                |
-| #JNP     | Jump if No Parity PF=0                            |
-| #JNS     | Jump if Not Signed (signed) SF=0                  |
-| #JNZ     | Jump if Not Zero ZF=0                             |
-| #JO      | Jump if Overflow (signed) OF=1                    |
-| #JP      | Jump if Parity PF=1                               |
-| #JPE     | Jump if Parity Even PF=1                          |
-| #JPO     | Jump if Parity Odd PF=0                           |
-| #JS      | Jump if Signed (signed) SF=1                      |
-| #JZ      | Jump if Zero ZF=1                                 |
+### 4. Instructions <a name="instructions"></a>
+- [ADC - Add With Carry](#adc---add-with-carry)
+- [ADD - Arithmetic Addition](#add---arithmetic-addition)
+- [AND - Logical And](#and---logical-and)
+- [CALL - Procedure Call](#call---procedure-call)
+- [CBW - Convert Byte to Word](#cbw---convert-byte-to-word)
+- [CLC - Clear Carry](#clc---clear-carry)
+- [CLD - Clear Direction Flag](#cld---clear-direction-flag)
+- [CLI - Clear Interrupt Flag (disable)](#cli---clear-interrupt-flag-disable)
+- [CMC - Complement Carry Flag](#cmc---complement-carry-flag)
+- [CMP - Compare](#cmp---compare)
+- [CMPS - Compare String (Byte, Word)](#cmps---compare-string-byte-word)
+- [CWD - Convert Word to Doubleword](#cwd---convert-word-to-doubleword)
+- [DEC - Decrement](#dec---decrement)
+- [DIV - Divide](#div---divide)
+- [HLT - Halt CPU](#hlt---halt-cpu)
+- [IDIV - Signed Integer Division](#idiv---signed-integer-division)
+- [IMUL - Signed Multiply](#imul---signed-multiply)
+- [IN - Input Byte or Word From Port](#in---input-byte-or-word-from-port)
+- [INC - Increment](#inc---increment)
+- [INS - Input String from Port (80188+)](#ins---input-string-from-port-80188)
+- [INT - Interrupt](#int---interrupt)
+- [INTO - Interrupt on Overflow](#into---interrupt-on-overflow)
+- [IRET - Interrupt Return](#iret---interrupt-return)
+- [JCXZ - Jump if Register CX is Zero](#jcxz---jump-if-register-cx-is-zero)
+- [JMP - Unconditional Jump](#jmp---unconditional-jump)
+- [LDS - Load Pointer Using DS](#lds---load-pointer-using-ds)
+- [LEA - Load Effective Address](#lea---load-effective-address)
+- [LES - Load Pointer Using ES](#les---load-pointer-using-es)
+- [LODS - Load String (Byte, Word)](#lods---load-string-byte-word)
+- [LOOP - Decrement CX and Loop if CX Not Zero](#loop---decrement-cx-and-loop-if-cx-not-zero)
+- [LOOPE/LOOPZ - Loop While Equal / Loop While Zero](#loope-loopz---loop-while-equal--loop-while-zero)
+- [LOOPNZ/LOOPNE - Loop While Not Zero / Loop While Not Equal](#loopnz-loopne---loop-while-not-zero--loop-while-not-equal)
+- [MOV - Move Byte or Word](#mov---move-byte-or-word)
+- [MOVS - Move String (Byte or Word)](#movs---move-string-byte-or-word)
+- [MUL - Unsigned Multiply](#mul---unsigned-multiply)
+- [NEG - Two's Complement Negation](#neg---twos-complement-negation)
+- [NOP - No Operation (90h)](#nop---no-operation-90h)
+- [NOT - One's Compliment Negation (Logical NOT)](#not---ones-compliment-negation-logical-not)
+- [OR - Inclusive Logical OR](#or---inclusive-logical-or)
+- [OUT - Output Data to Port](#out---output-data-to-port)
+- [OUTS - Output String to Port (80188+)](#outs---output-string-to-port-80188)
+- [POP - Pop Word off Stack](#pop---pop-word-off-stack)
+- [POPA - Pop All Registers off Stack (80188+)](#popa---pop-all-registers-off-stack-80188)
+- [POPF - Pop Flags off Stack](#popf---pop-flags-off-stack)
+- [PUSH - Push Word onto Stack](#push---push-word-onto-stack)
+- [PUSHA - Push All Registers onto Stack (80188+)](#pusha---push-all-registers-onto-stack-80188)
+- [PUSHF - Push Flags onto Stack](#pushf---push-flags-onto-stack)
+- [RCL - Rotate Through Carry Left](#rcl---rotate-through-carry-left)
+- [RCR - Rotate Through Carry Right](#rcr---rotate-through-carry-right)
+- [REP - Repeat String Operation](#rep---repeat-string-operation)
+- [REPE/REPZ - Repeat Equal / Repeat Zero](#repe-repz---repeat-equal--repeat-zero)
+- [REPNE/REPNZ - Repeat Not Equal / Repeat Not Zero](#repne-repnz---repeat-not-equal--repeat-not-zero)
+- [RET/RETF - Return From Procedure](#ret-retf---return-from-procedure)
+- [ROL - Rotate Left](#rol---rotate-left)
+- [ROR - Rotate Right](#ror---rotate-right)
+- [SAL/SHL - Shift Arithmetic Left / Shift Logical Left](#sal-shl---shift-arithmetic-left--shift-logical-left)
+- [SAR - Shift Arithmetic Right](#sar---shift-arithmetic-right)
+- [SBB - Subtract with Borrow/Carry](#sbb---subtract-with-borrow-carry)
+- [SCAS - Scan String (Byte, Word)](#scas---scan-string-byte-word)
+- [SHL - Shift Logical Left](#shl---shift-logical-left)
+- [STC - Set Carry](#stc---set-carry)
+- [STD - Set Direction Flag](#std---set-direction-flag)
+- [STI - Set Interrupt Flag (Enable Interrupts)](#sti---set-interrupt-flag-enable-interrupts)
+- [STOS - Store String (Byte, Word)](#stos---store-string-byte-word)
+- [SUB - Subtract](#sub---subtract)
+- [TEST - Test For Bit Pattern](#test---test-for-bit-pattern)
+- [XCHG - Exchange Register/Memory with Register](#xchg---exchange-register-memory-with-register)
+- [XLAT - Translate Byte in AL Using Table in Memory](#xlat---translate-byte-in-al-using-table-in-memory)
+- [XOR - Exclusive OR](#xor---exclusive-or)
 
-- It's a good programming practice to organize code so the expected case is executed without a jump since the actual jump takes longer to execute than falling through the test.
+> It's a good programming practice to organize code so the expected case is executed without a jump since the actual jump takes longer to execute than falling through the test.
 
----
-
-***ADC - Add With Carry***
-
-- Usage: #ADC dest,src
-
+### ADC - Add With Carry
+- Usage: ADC dest,src
 - Modifies flags: AF CF OF SF PF ZF
-
-Sums two binary operands placing the result in the destination. If CF is set, a 1 is added to the destination.
-
+- Sums two binary operands placing the result in the destination. If CF is set, a 1 is added to the destination.
 - Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
 
----
-
-***ADD - Arithmetic Addition***
-
-- Usage: #ADD dest,src
-
+### ADD - Arithmetic Addition
+- Usage: ADD dest,src
 - Modifies flags: AF CF OF PF SF ZF
-
-Adds "src" to "dest" and replacing the original contents of "dest". Both operands are binary.
-
+- Adds "src" to "dest" and replacing the original contents of "dest". Both operands are binary.
 - Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
 
----
-
-***AND - Logical And***
-
-- Usage: #AND dest,src
-
+### AND - Logical And
+- Usage: AND dest,src
 - Modifies flags: CF OF PF SF ZF (AF undefined)
-
-Performs a logical AND of the two operands replacing the destination with the result.
-
+- Performs a logical AND of the two operands replacing the destination with the result.
 - Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
 
----
-
-***CALL - Procedure Call***
-
-- Usage: #CALL destination
-
+### CALL - Procedure Call
+- Usage: CALL destination
 - Modifies flags: None
+- Pushes Instruction Pointer (and Code Segment for far calls) onto stack and loads Instruction Pointer with the address of proc-name. Code continues with execution at CS:IP.
 
-Pushes Instruction Pointer (and Code Segment for far calls) onto stack and loads Instruction Pointer with the address of proc-name. Code continues with execution at CS:IP.
-
----
-
-***CBW - Convert Byte to Word***
-
-- Usage: #CBW
-
+### CBW - Convert Byte to Word
+- Usage: CBW
 - Modifies flags: None
+- Converts byte in AL to word Value in AX by extending sign of AL throughout register AH.
 
-Converts byte in AL to word Value in AX by extending sign of AL throughout register AH.
-
----
-
-***CLC - Clear Carry***
-
-- Usage: #CLC
-
+### CLC - Clear Carry
+- Usage: CLC
 - Modifies flags: CF
+- Clears the Carry Flag.
 
-Clears the Carry Flag.
-
----
-
-***CLD - Clear Direction Flag***
-
-- Usage: #CLD
-
+### CLD - Clear Direction Flag
+- Usage: CLD
 - Modifies flags: DF
+- Clears the Direction Flag causing string instructions to increment the SI and DI index registers.
 
-Clears the Direction Flag causing string instructions to increment the SI and DI index registers.
-
----
-
-***CLI - Clear Interrupt Flag (disable)***
-
-- Usage: #CLI
-
+### CLI - Clear Interrupt Flag (disable)
+- Usage: CLI
 - Modifies flags: IF
+- Disables the maskable hardware interrupts by clearing the Interrupt flag. NMI's and software interrupts are not inhibited.
 
-Disables the maskable hardware interrupts by clearing the Interrupt flag. NMI's and software interrupts are not inhibited.
-
----
-
-***CMC - Complement Carry Flag***
-
-- Usage: #CMC
-
+### CMC - Complement Carry Flag
+- Usage: CMC
 - Modifies flags: CF
+- Toggles (inverts) the Carry Flag
 
-Toggles (inverts) the Carry Flag
-
----
-
-***CMP - Compare***
-
-- Usage: #CMP dest,src
-
+### CMP - Compare
+- Usage: CMP dest,src
 - Modifies flags: AF CF OF PF SF ZF
-
-Subtracts source from destination and updates the flags but does not save result. Flags can subsequently be checked for conditions (e.g. with [Jxx instructions]).
-
+- Subtracts source from destination and updates the flags but does not save result. Flags can subsequently be checked for conditions (e.g. with [Jxx instructions]).
 - Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
 
----
-
-***CMPS - Compare String (Byte, Word)***
-
-- Usage: #CMPS dest,src CMPSB CMPSW
-
+### CMPS - Compare String (Byte, Word)
+- Usage: CMPS dest,src CMPSB CMPSW
 - Modifies flags: AF CF OF PF SF ZF
+- Subtracts destination value from source without saving results. Updates flags based on the subtraction and the index registers SI and DI are incremented or decremented depending on the state of the Direction Flag. CMPSB inc/decrements the index registers by 1, CMPSW inc/decrements by 2, while CMPSD increments or decrements by 4. The REP prefixes can be used to process entire data items.
 
-Subtracts destination value from source without saving results. Updates flags based on the subtraction and the index registers SI and DI are incremented or decremented depending on the state of the Direction Flag. CMPSB inc/decrements the index registers by 1, CMPSW inc/decrements by 2, while CMPSD increments or decrements by 4. The REP prefixes can be used to process entire data items.
-
----
-
-***CWD - Convert Word to Doubleword***
-
-- Usage: #CWD
-
+### CWD - Convert Word to Doubleword
+- Usage: CWD
 - Modifies flags: None
+- Extends sign of word in register AX throughout register DX forming a doubleword quantity in DX:AX.
 
-Extends sign of word in register AX throughout register DX forming a doubleword quantity in DX:AX.
-
----
-
-***DEC - Decrement***
-
-- Usage: #DEC dest
-
+### DEC - Decrement
+- Usage: DEC dest
 - Modifies flags: AF OF PF SF ZF
+- Unsigned binary subtraction of one from the destination.
 
-Unsigned binary subtraction of one from the destination.
-
----
-
-***DIV - Divide***
-
-- Usage: #DIV src
-
+### DIV - Divide
+- Usage: DIV src
 - Modifies flags: (AF,CF,OF,PF,SF,ZF undefined)
-
-Unsigned binary division of accumulator by source. If the source divisor is a byte value then AX is divided by "src" and the quotient is placed in AL and the remainder in AH. If source operand is a word value, then DX:AX is divided by "src" and the quotient is stored in AX and the remainder in DX.
-
+- Unsigned binary division of accumulator by source. If the source divisor is a byte value then AX is divided by "src" and the quotient is placed in AL and the remainder in AH. If source operand is a word value, then DX:AX is divided by "src" and the quotient is stored in AX and the remainder in DX.
 - Arguments: reg8 reg16 mem8 mem16
 
----
-
-***HLT - Halt CPU***
-
-- Usage: #HLT
-
+### HLT - Halt CPU
+- Usage: HLT
 - Modifies flags: None
+- Halts CPU until RESET line is activated, NMI or maskable interrupt received. The CPU becomes dormant but retains the current CS:IP for later restart.
 
-Halts CPU until RESET line is activated, NMI or maskable interrupt received. The CPU becomes dormant but retains the current CS:IP for later restart.
-
----
-
-***IDIV - Signed Integer Division***
-
-- Usage: #IDIV src
-
+### IDIV - Signed Integer Division
+- Usage: IDIV src
 - Modifies flags: (AF,CF,OF,PF,SF,ZF undefined)
-
-Signed binary division of accumulator by source. If source is a byte value, AX is divided by "src" and the quotient is stored in AL and the remainder in AH. If source is a word value, DX:AX is divided by "src", and the quotient is stored in AL and the remainder in DX.
-
+- Signed binary division of accumulator by source. If source is a byte value, AX is divided by "src" and the quotient is stored in AL and the remainder in AH. If source is a word value, DX:AX is divided by "src", and the quotient is stored in AL and the remainder in DX.
 - Arguments: reg8 reg16 mem8 mem16
 
----
-
-***IMUL - Signed Multiply***
-
-- Usage: #IMUL src
-
+### IMUL - Signed Multiply
+- Usage: IMUL src
 - Modifies flags: CF OF (AF,PF,SF,ZF undefined)
-
-Signed multiplication of accumulator by "src" with result placed in the accumulator. If the source operand is a byte value, it is multiplied by AL and the result stored in AX. If the source operand is a word value it is multiplied by AX and the result is stored in DX:AX.
-
+- Signed multiplication of accumulator by "src" with result placed in the accumulator. If the source operand is a byte value, it is multiplied by AL and the result stored in AX. If the source operand is a word value it is multiplied by AX and the result is stored in DX:AX.
 - Arguments: reg8 reg16 mem8 mem16
 
----
-
-***IN - Input Byte or Word From Port***
-
-- Usage: #IN accum,port
-
+### IN - Input Byte or Word From Port
+- Usage: IN accum,port
 - Modifies flags: None
+- A byte or word is read from "port" and placed in AL or AX respectively. If the port number is in the range of 0-255 it can be specified as an immediate, otherwise the port number must be specified in DX. Valid port ranges on the PC are 0-1024, though values through 65535 may be specified and recognized by third party vendors and PS/2's.
 
-A byte or word is read from "port" and placed in AL or AX respectively. If the port number is in the range of 0-255 it can be specified as an immediate, otherwise the port number must be specified in DX. Valid port ranges on the PC are 0-1024, though values through 65535 may be specified and recognized by third party vendors and PS/2's.
-
----
-
-***INC - Increment***
-
-- Usage: #INC dest
-
+### INC - Increment
+- Usage: INC dest
 - Modifies flags: AF OF PF SF ZF
+- Adds one to destination unsigned binary operand.
 
-Adds one to destination unsigned binary operand.
-
----
-
-***INS - Input String from Port (80188+)***
-
-- Usage: #INS dest,port INSB INSW
-
+### INS - Input String from Port (80188+)
+- Usage: INS dest,port INSB INSW
 - Modifies flags: None
+- Loads data from port to the destination ES:DI (even if a destination operand is supplied). DI is adjusted by the size of the operand and increased if the Direction Flag is cleared and decreased if the Direction Flag is set. For INSB, INSW no operands are allowed and the size is determined by the mnemonic.
 
-Loads data from port to the destination ES:DI (even if a destination operand is supplied). DI is adjusted by the size of the operand and increased if the Direction Flag is cleared and decreased if the Direction Flag is set. For INSB, INSW no operands are allowed and the size is determined by the mnemonic.
-
----
-
-***INT - Interrupt***
-
-- Usage: #INT num
-
+### INT - Interrupt
+- Usage: INT num
 - Modifies flags: TF IF
+- Initiates a software interrupt by pushing the flags, clearing the Trap and Interrupt Flags, pushing CS followed by IP and loading CS:IP with the value found in the interrupt vector table. Execution then begins at the location addressed by the new CS:IP.
 
-Initiates a software interrupt by pushing the flags, clearing the Trap and Interrupt Flags, pushing CS followed by IP and loading CS:IP with the value found in the interrupt vector table. Execution then begins at the location addressed by the new CS:IP
-
----
-
-***INTO - Interrupt on Overflow***
-
-- Usage: #INTO
-
+### INTO - Interrupt on Overflow
+- Usage: INTO
 - Modifies flags: IF TF
+- If the Overflow Flag is set this instruction generates an INT 4 which causes the code addressed by 0000:0010 to be executed.
 
-If the Overflow Flag is set this instruction generates an INT 4 which causes the code addressed by 0000:0010 to be executed.
-
----
-
-***IRET - Interrupt Return***
-
-- Usage: #IRET
-
+### IRET - Interrupt Return
+- Usage: IRET
 - Modifies flags: AF CF DF IF PF SF TF ZF
+- Returns from an interrupt procedure by popping IP, CS, and flags from stack, in that order.
 
-Returns control to point of interruption by popping IP, CS and then the Flags from the stack and continues execution at this location. CPU exception interrupts will return to the instruction that cause the exception because the CS:IP placed on the stack during the interrupt is the address of the offending instruction.
-
----
-
-***JCXZ - Jump if Register CX is Zero***
-
-- Usage: #JCXZ label
-
+### JA - Jump if Above
+- Usage: JA label
 - Modifies flags: None
+- If CF=0 and ZF=0 transfers control to label, else continues with next instruction. Operands must be of same size. If they are not, you will need to use the data size override operator.
 
-Causes execution to branch to "label" if register CX is zero. Uses unsigned comparision.
-
----
-
-***JMP - Unconditional Jump***
-
-- Usage: #JMP label
-
+### JAE - Jump if Above or Equal
+- Usage: JAE label
 - Modifies flags: None
+- If CF=0 transfers control to label, else continues with next instruction. Operands must be of same size. If they are not, you will need to use the data size override operator.
 
-Unconditionally transfers control to "label". Jumps by default are within -32768 to 32767 bytes from the instruction following the jump. NEAR and SHORT jumps cause the IP to be updated while FAR jumps cause CS and IP to be updated.
-
----
-
-***LDS - Load Pointer Using DS***
-
-- Usage: #LDS dest,src
-
+### JC - Jump if Carry (Same as JB)
+- Usage: JC label
 - Modifies flags: None
+- If CF=1 transfers control to label, else continues with next instruction.
 
-Loads 32-bit pointer from memory source to destination register and DS. The offset is placed in the destination register and the segment is placed in DS. To use this instruction the word at the lower memory address must contain the offset and the word at the higher address must contain the segment. This simplifies the loading of far pointers from the stack and the interrupt vector table.
-
----
-
-***LEA - Load Effective Address***
-
-- Usage: #LEA dest,src
-
+### JE - Jump if Equal (Same as JZ)
+- Usage: JE label
 - Modifies flags: None
+- If ZF=1 transfers control to label, else continues with next instruction.
 
-Transfers offset address of "src" to the destination register.
-
----
-
-***LES - Load Pointer Using ES***
-
-- Usage: #LES dest,src - Modifies flags: None
-
-Loads 32-bit pointer from memory source to destination register and ES. The offset is placed in the destination register and the segment is placed in ES. To use this instruction the word at the lower memory address must contain the offset and the word at the higher address must contain the segment. This simplifies the loading of far pointers from the stack and the interrupt vector table.
-
----
-
-***LODS - Load String (Byte, Word)***
-
-- Usage: #LODS src LODSB LODSW
-
+### JG - Jump if Greater
+- Usage: JG label
 - Modifies flags: None
+- If ZF=0 and SF=OF transfers control to label, else continues with next instruction.
 
-Transfers string element addressed by DS:SI (even if an operand is supplied) to the accumulator. SI is incremented based on the size of the operand or based on the instruction used. If the Direction Flag is set SI is decremented, if the Direction Flag is clear SI is incremented. Use with REP prefixes.
-
----
-
-***LOOP - Decrement CX and Loop if CX Not Zero***
-
-- Usage: #LOOP label
-
+### JGE - Jump if Greater or Equal
+- Usage: JGE label
 - Modifies flags: None
+- If SF=OF transfers control to label, else continues with next instruction.
 
-Decrements CX by 1 and transfers control to "label" if CX is not Zero. The "label" operand must be within -128 or 127 bytes of the instruction following the loop instruction
-
----
-
-***LOOPE/LOOPZ - Loop While Equal / Loop While Zero***
-
-- Usage: #LOOPE label LOOPZ label - Modifies flags: None
-
-Decrements CX by 1 (without modifying the flags) and transfers control to "label" if CX != 0 and the Zero Flag is set. The "label" operand must be within -128 or 127 bytes of the instruction following the loop instruction.
-
----
-
-***LOOPNZ/LOOPNE - Loop While Not Zero / Loop While Not Equal***
-
-- Usage: #LOOPNZ label LOOPNE label
-
+### JL - Jump if Less
+- Usage: JL label
 - Modifies flags: None
+- If SF<>OF transfers control to label, else continues with next instruction.
 
-Decrements CX by 1 (without modifying the flags) and transfers control to "label" if CX != 0 and the Zero Flag is clear. The "label" operand must be within -128 or 127 bytes of the instruction following the loop instruction.
-
----
-
-***MOV - Move Byte or Word***
-
-- Usage: #MOV dest,src
-
+### JLE - Jump if Less or Equal
+- Usage: JLE label
 - Modifies flags: None
+- If ZF=1 or SF<>OF transfers control to label, else continues with next instruction.
 
-Copies byte or word from the source operand to the destination operand. If the destination is SS interrupts are disabled except on early buggy 808x CPUs. Some CPUs disable interrupts if the destination is any of the segment registers
-
-- Arguments: reg,reg mem,reg reg,mem mem,immed reg,immed mem,accum accum,mem segreg,reg16 segreg,mem16 reg16,segreg mem16,segreg
-
----
-
-***MOVS - Move String (Byte or Word)***
-
-- Usage: #MOVS dest,src MOVSB MOVSW
-
+### JMP - Jump
+- Usage: JMP label
 - Modifies flags: None
+- Transfers control unconditionally to label.
 
-Copies data from addressed by DS:SI (even if operands are given) to the location ES:DI destination and updates SI and DI based on the size of the operand or instruction used. SI and DI are incremented when the Direction Flag is cleared and decremented when the Direction Flag is Set. Use with REP prefixes.
+### LAHF - Load AH with Flags
+- Usage: LAHF
+- Modifies flags: None
+- Loads AH with lower byte of flags. Bits 4-7 correspond to the flags, bits 0-3 are set to 1, 0, 0, and 0 respectively.
 
----
+### LEA - Load Effective Address
+- Usage: LEA reg,memory
+- Modifies flags: None
+- Loads register with offset of specified memory location.
 
-***MUL - Unsigned Multiply***
+### LDS - Load DS and Register
+- Usage: LDS reg,memory
+- Modifies flags: None
+- Loads DS with word at memory location "memory" and loads the specified register with the word at memory location "memory"+2.
 
-- Usage: #MUL src
+### LES - Load ES and Register
+- Usage: LES reg,memory
+- Modifies flags: None
+- Loads ES with word at memory location "memory" and loads the specified register with the word at memory location "memory"+2.
 
+### LOCK - Lock Bus
+- Usage: LOCK
+- Modifies flags: None
+- Asserts the bus lock signal preventing other processors on the bus from gaining control of the system bus.
+
+### LODS - Load String (Byte or Word)
+- Usage: LODS src LODSB LODSW
+- Modifies flags: None
+- Loads AL or AX with the byte or word at memory location DS:SI. SI is then incremented or decremented based on the size of the operand and the state of the Direction Flag. For LODSB and LODSW no operands are allowed and size is determined by the mnemonic.
+
+### LOOP - Loop
+- Usage: LOOP label
+- Modifies flags: None
+- Decrements CX and transfers control to label if CX is not 0. If CX is 0, execution continues with the next instruction.
+
+### LOOPZ - Loop While Equal (Same as LOOPE)
+- Usage: LOOPZ label
+- Modifies flags: None
+- Decrements CX and transfers control to label if CX is not 0 and ZF is set. If either of these conditions are not met, execution continues with the next instruction.
+
+### LOOPNZ - Loop While Not Equal (Same as LOOPNE)
+- Usage: LOOPNZ label
+- Modifies flags: None
+- Decrements CX and transfers control to label if CX is not 0 and ZF is clear. If either of these conditions are not met, execution continues with the next instruction.
+
+### MOV - Move Byte or Word
+- Usage: MOV dest,src
+- Modifies flags: None
+- Transfers byte or word from source to destination. The source and destination operands cannot both be memory operands.
+- Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
+
+### MOVS - Move String (Byte or Word)
+- Usage: MOVS dest,src MOVSB MOVSW
+- Modifies flags: None
+- Moves byte or word at DS:SI to ES:DI. SI and DI are then adjusted based on the size of the operand and the state of the Direction Flag. For MOVSB and MOVSW no operands are allowed and size is determined by the mnemonic.
+
+### MUL - Multiply
+- Usage: MUL src
 - Modifies flags: CF OF (AF,PF,SF,ZF undefined)
+- Unsigned multiplication of accumulator by "src" with result placed in accumulator. If the source operand is a byte value it is multiplied by AL and the result is stored in AX. If the source operand is a word value it is multiplied by AX and the result is stored in DX:AX.
 
-Unsigned multiply of the accumulator by the source. If "src" is a byte value, then AL is used as the other multiplicand and the result is placed in AX. If "src" is a word value, then AX is multiplied by "src" and DX:AX receives the result.
+### NEG - Negate
+- Usage: NEG dest
+- Modifies flags: CF OF PF AF SF ZF
+- Two's complement negation of the destination operand.
 
-- Arguments: reg8 reg16 mem8 mem16
+### NOP - No Operation
+- Usage: NOP
+- Modifies flags: None
+- Performs no operation and continues with the next instruction.
 
----
+### NOT - Logical Not
+- Usage: NOT dest
+- Modifies flags: None
+- Logical NOT of destination (each bit is inverted: 0->1, 1->0).
 
-***NEG - Two's Complement Negation***
+### OR - Logical Or
+- Usage: OR dest,src
+- Modifies flags: CF OF PF SF ZF (AF undefined)
+- Performs a logical OR of the two operands, replacing the destination with the result.
 
-- Usage: #NEG dest
+### OUT - Output Byte or Word to Port
+- Usage: OUT port,accum
+- Modifies flags: None
+- A byte or word is transferred from AL or AX to "port". If the port number is in the range of 0-255 it can be specified as an immediate, otherwise the port number must be specified in DX. Valid port ranges on the PC are 0-1024, though values through 65535 may be specified and recognized by third party vendors and PS/2's.
 
+### OUTS - Output String to Port (80188+)
+- Usage: OUTS port,src OUTSB OUTSW
+- Modifies flags: None
+- Sends data from source operand to port. If no source operand is specified, DS:SI is assumed. SI is adjusted by the size of the operand and increased if the Direction Flag is cleared and decreased if the Direction Flag is set. For OUTSB, OUTSW no operands are allowed and the size is determined by the mnemonic.
+
+### POP - Pop Word off Stack
+- Usage: POP reg/mem
+- Modifies flags: None
+- A word is removed from the top of the stack and placed in the destination.
+
+### POPF - Pop Flags off Stack
+- Usage: POPF
+- Modifies flags: AF CF DF IF PF SF TF ZF
+- Flags are popped from the stack into the flag register. The value of the Interrupt Flag is not affected if the instruction was executed in Virtual 8086 mode.
+
+### PUSH - Push Word onto Stack
+- Usage: PUSH reg/mem
+- Modifies flags: None
+- Pushes the source operand onto the stack.
+
+### PUSHF - Push Flags onto Stack
+- Usage: PUSHF
+- Modifies flags: None
+- Pushes the flag register onto the stack.
+
+### RCL - Rotate Left through Carry
+- Usage: RCL dest,count
+- Modifies flags: CF OF
+- Shifts bits of destination to the left for count times (each shift count is given by the least significant bits of the count operand) with the bit going into the Carry Flag being shifted into the least significant bit of the destination and the bit going out of the most significant bit of the destination shifted into the Carry Flag.
+
+### RCR - Rotate Right through Carry
+- Usage: RCR dest,count
+- Modifies flags: CF OF
+- Shifts bits of destination to the right for count times (each shift count is given by the least significant bits of the count operand) with the bit going into the Carry Flag being shifted into the most significant bit of the destination and the bit going out of the least significant bit of the destination shifted into the Carry Flag.
+
+### RET - Return from Procedure
+- Usage: RET count?
+- Modifies flags: None
+- Pops IP (and optionally CS) from stack. If the optional count operand is used, it specifies the number of bytes to release from the stack after IP and CS are popped. This allows for the clearing of parameters pushed onto the stack before the procedure was called.
+
+### ROL - Rotate Left
+- Usage: ROL dest,count
+- Modifies flags: CF OF
+- Shifts bits of destination to the left for count times. The bit that was in the highest bit position is shifted into the lowest bit position.
+
+### ROR - Rotate Right
+- Usage: ROR dest,count
+- Modifies flags: CF OF
+- Shifts bits of destination to the right for count times. The bit that was in the lowest bit position is shifted into the highest bit position.
+
+### SAHF - Store AH into Flags
+- Usage: SAHF
+- Modifies flags: AF CF PF SF ZF
+- Bits 4-7 of AH are transferred to the equivalent flag bits. Bits 0-3 of AH are ignored.
+
+### SAL - Shift Arithmetic Left (Same as SHL)
+- Usage: SAL dest,count
+- Modifies flags: CF OF PF SF ZF (AF undefined)
+- Shifts bits of destination to the left count times, filling the vacated bit positions with zeros.
+
+### SAR - Shift Arithmetic Right
+- Usage: SAR dest,count
+- Modifies flags: CF OF PF SF ZF (AF undefined)
+- Shifts bits of destination to the right count times, filling the vacated bit positions with the original value of the high bit.
+
+### SBB - Subtract with Borrow
+- Usage: SBB dest,src
 - Modifies flags: AF CF OF PF SF ZF
+- Subtracts source and borrow flag (CF) from destination. The result is stored in destination.
 
-Subtracts the destination from 0 and saves the 2s complement of "dest" back into "dest".
-
----
-
-***NOP - No Operation (90h)***
-
-- Usage: #NOP
-
-- Modifies flags: None
-
-This is a do nothing instruction. It results in occupation of both space and time and is most useful for patching code segments. (This is the original XCHG AL,AL instruction)
-
----
-
-***NOT - One's Compliment Negation (Logical NOT)***
-
-- Usage: #NOT dest
-
-- Modifies flags: None
-
-Inverts the bits of the "dest" operand forming the 1s complement.
-
----
-
-***OR - Inclusive Logical OR***
-
-- Usage: #OR dest,src
-
-- Modifies flags: CF OF PF SF ZF (AF undefined)
-
-Logical inclusive OR of the two operands returning the result in the destination. Any bit set in either operand will be set in the destination.
-
-- Arguments: reg,reg mem,reg reg,mem reg,immed mem8,immed8 mem16,immed16 accum,immed
-
----
-
-***OUT - Output Data to Port***
-
-- Usage: #OUT port,accum
-
-- Modifies flags: None
-
-Transfers byte in AL,word in AX or dword in EAX to the specified hardware port address. If the port number is in the range of 0-255 it can be specified as an immediate. If greater than 255 then the port number must be specified in DX. Since the PC only decodes 10 bits of the port address, values over 1023 can only be decoded by third party vendor equipment and also map to the port range 0-1023.
-
-- Arguments: immed8,accum immed8,accum DX,accum DX,accum
-
----
-
-***OUTS - Output String to Port (80188+)***
-
-- Usage: #OUTS port,src OUTSB OUTSW
-
-- Modifies flags: None
-
-Transfers a byte, word or doubleword from "src" to the hardware port specified in DX. For instructions with no operands the "src" is located at DS:SI and SI is incremented or decremented by the size of the operand or the size dictated by the instruction format. When the Direction Flag is set SI is decremented, when clear, SI is incremented. If the port number is in the range of 0-255 it can be specified as an immediate. If greater than 255 then the port number must be specified in DX. Since the PC only decodes 10 bits of the port address, values over 1023 can only be decoded by third party vendor equipment and also map to the port range 0-1023.
-
----
-
-***POP - Pop Word off Stack***
-
-- Usage: #POP dest - Modifies flags: None
-
-Transfers word at the current stack top (SS:SP) to the destination then increments SP by two to point to the new stack top. CS is not a valid destination.
-
----
-
-***POPA - Pop All Registers off Stack (80188+)***
-
-- Usage: #POPA
-
-- Modifies flags: None
-
-Pops the top 8 words off the stack into the 8 general purpose 16 bit registers. Registers are popped in the following order: DI, SI, BP, SP, DX, CX and AX. The SP value popped from the stack is actually discarded.
-
----
-
-***POPF - Pop Flags off Stack***
-
-- Usage: #POPF
-
-- Modifies flags: all flags
-
-Pops word from stack into the Flags Register and then increments SP by 2.
-
----
-
-***PUSH - Push Word onto Stack***
-
-- Usage: #PUSH src PUSH immed (80188+ only)
-
-- Modifies flags: None
-
-Decrements SP by the size of the operand (two or four, byte values are sign extended) and transfers one word from source to the stack top (SS:SP).
-
----
-
-***PUSHA - Push All Registers onto Stack (80188+)***
-
-- Usage: #PUSHA
-
-- Modifies flags: None
-
-Pushes all general purpose registers onto the stack in the following order: AX, CX, DX, BX, SP, BP, SI, DI. The value of SP is the value before the actual push of SP.
-
----
-
-***PUSHF - Push Flags onto Stack***
-
-- Usage: #PUSHF
-
-- Modifies flags: None
-
-Transfers the Flags Register onto the stack. PUSHF saves a 16 bit value.
-
----
-
-***RCL - Rotate Through Carry Left***
-
-- Usage: #RCL dest,count
-
-- Modifies flags: CF OF
-
-Rotates the bits in the destination to the left "count" times with all data pushed out the left side re-entering on the right. The Carry Flag holds the last bit rotated out.
-
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
-
----
-
-***RCR - Rotate Through Carry Right***
-
-- Usage: #RCR dest,count
-
-- Modifies flags: CF OF
-
-Rotates the bits in the destination to the right "count" times with all data pushed out the right side re-entering on the left. The Carry Flag holds the last bit rotated out.
-
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
-
----
-
-***REP - Repeat String Operation***
-
-- Usage: #REP
-
-- Modifies flags: None
-
-Repeats execution of string instructions while CX != 0. After each string operation, CX is decremented and the Zero Flag is tested. The combination of a repeat prefix and a segment override on CPU's before the 386 may result in errors if an interrupt occurs before CX=0.
-
----
-
-***REPE/REPZ - Repeat Equal / Repeat Zero***
-
-- Usage: #REPE / REPZ
-
-- Modifies flags: None
-
-Repeats execution of string instructions while CX != 0 and the Zero Flag is set. CX is decremented and the Zero Flag tested after each string operation. The combination of a repeat prefix and a segment override on processors other than the 386 may result in errors if an interrupt occurs before CX=0.
-
----
-
-***REPNE/REPNZ - Repeat Not Equal / Repeat Not Zero***
-
-- Usage: #REPNE REPNZ
-
-- Modifies flags: None
-
-Repeats execution of string instructions while CX != 0 and the Zero Flag is clear. CX is decremented and the Zero Flag tested after each string operation. The combination of a repeat prefix and a segment override on processors other than the 386 may result in errors if an interrupt occurs before CX=0.
-
----
-
-***RET/RETF - Return From Procedure***
-
-- Usage: #RET / RETF
-
-- Modifies flags: None
-
-Transfers control from a procedure back to the instruction address saved on the stack. Far returns (RETF) pop the IP followed by the CS, while near returns pop only the IP register.
-
----
-
-***ROL - Rotate Left***
-
-- Usage: #ROL dest,count
-
-- Modifies flags: CF OF
-
-Rotates the bits in the destination to the left "count" times with all data pushed out the left side re-entering on the right. The Carry Flag will contain the value of the last bit rotated out.
-
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
-
----
-
-***ROR - Rotate Right***
-
-- Usage: #ROR dest,count
-
-- Modifies flags: CF OF
-
-Rotates the bits in the destination to the right "count" times with all data pushed out the right side re-entering on the left. The Carry Flag will contain the value of the last bit rotated out.
-
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
-
----
-
-***SAL/SHL - Shift Arithmetic Left / Shift Logical Left***
-
-- Usage: #SAL dest,count SHL dest,count
-
-- Modifies flags: CF OF PF SF ZF (AF undefined)
-
-Shifts the destination left by "count" bits with zeroes shifted in on right. The Carry Flag contains the last bit shifted out.
-
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
-
----
-
-***SAR - Shift Arithmetic Right***
-
-- Usage: #SAR dest,count
-
-- Modifies flags: CF OF PF SF ZF (AF undefined)
-
-Shifts the destination right by "count" bits with the current sign bit replicated in the leftmost bit. The Carry Flag contains the last bit shifted out.
-
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
-
----
-
-***SBB - Subtract with Borrow/Carry***
-
-- Usage: #SBB dest,src - Modifies flags: AF CF OF PF SF ZF
-
-Subtracts the source from the destination, and subtracts 1 extra if the Carry Flag is set. Results are returned in "dest".
-
-- Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
-
----
-
-***SCAS - Scan String (Byte, Word)***
-
-- Usage: #SCAS string SCASB SCASW
-
+### SCAS - Scan String (Byte, Word)
+- Usage: SCAS dest SCASB SCASW
 - Modifies flags: AF CF OF PF SF ZF
+- Compares AL or AX with byte or word at ES:DI. DI is then adjusted based on the size of the operand and the state of the Direction Flag. For SCASB and SCASW no operands are allowed and size is determined by the mnemonic.
 
-Compares value at ES:DI (even if operand is specified) from the accumulator and sets the flags similar to a subtraction. DI is incremented/decremented based on the instruction format (or operand size) and the state of the Direction Flag. Use with REP prefixes.
+### SHL - Shift Logical Left (Same as SAL)
+- Usage: SHL dest,count
+- Modifies flags: CF OF PF SF ZF (AF undefined)
+- Shifts bits of destination to the left count times, filling the vacated bit positions with zeros.
 
----
-
-***SHL - Shift Logical Left***
-
-See: #SAL SHR - Shift Logical Right
-
+### SHR - Shift Logical Right
 - Usage: SHR dest,count
-
 - Modifies flags: CF OF PF SF ZF (AF undefined)
+- Shifts bits of destination to the right count times, filling the vacated bit positions with zeros.
 
-Shifts the destination right by "count" bits with zeroes shifted in on the left. The Carry Flag contains the last bit shifted out.
+### STC - Set Carry Flag
+- Usage: STC
+- Modifies flags: CF
+- Sets the Carry Flag.
 
-- Arguments: reg,1 mem,1 reg,CL mem,CL reg,immed8 mem,immed8
+### STD - Set Direction Flag
+- Usage: STD
+- Modifies flags: DF
+- Sets the Direction Flag causing string instructions to decrement the SI and DI index registers.
 
----
+### STI - Set Interrupt Flag (enable)
+- Usage: STI
+- Modifies flags: IF
+- Enables the maskable hardware interrupts by setting the Interrupt flag. NMI's and software interrupts are not inhibited.
 
-***STC - Set Carry***
-
-- Usage: #STC - Modifies flags: CF
-
-Sets the Carry Flag to 1.
-
----
-
-***STD - Set Direction Flag***
-
-- Usage: #STD - Modifies flags: DF
-
-Sets the Direction Flag to 1 causing string instructions to auto-decrement SI and DI instead of auto-increment.
-
----
-
-***STI - Set Interrupt Flag (Enable Interrupts)***
-
-- Usage: #STI - Modifies flags: IF
-
-Sets the Interrupt Flag to 1, which enables recognition of all hardware interrupts. If an interrupt is generated by a hardware device, an End of Interrupt (EOI) must also be issued to enable other hardware interrupts of the same or lower priority.
-
----
-
-***STOS - Store String (Byte, Word)***
-
-- Usage: #STOS dest STOSB STOSW - Modifies flags: None
-
-Stores value in accumulator to location at ES:DI (even if operand is given). DI is incremented/decremented based on the size of the operand (or instruction format) and the state of the Direction Flag. Use with REP prefixes.
-
----
-
-***SUB - Subtract***
-
-- Usage: #SUB dest,src
-
-- Modifies flags: AF CF OF PF SF ZF
-
-The source is subtracted from the destination and the result is stored in the destination.
-
-- Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
-
----
-
-***TEST - Test For Bit Pattern***
-
-- Usage: #TEST dest,src
-
-- Modifies flags: CF OF PF SF ZF (AF undefined)
-
-Performs a logical AND of the two operands updating the flags register without saving the result.
-
-- Arguments: reg,reg reg,mem mem,reg reg,immed mem,immed accum,immed
-
----
-
-***XCHG - Exchange***
-
-- Usage: #XCHG dest,src
-
+### STOS - Store String (Byte, Word)
+- Usage: STOS dest STOSB STOSW
 - Modifies flags: None
+- Stores AL or AX in destination ES:DI. DI is then adjusted based on the size of the operand and the state of the Direction Flag. For STOSB and STOSW no operands are allowed and size is determined by the mnemonic.
 
-Exchanges contents of source and destination.
+### SUB - Subtract
+- Usage: SUB dest,src
+- Modifies flags: AF CF OF PF SF ZF
+- Subtracts source operand from destination operand.
 
-- Arguments: reg,reg mem,reg reg,mem accum,reg reg,accum
-
----
-
-***XOR - Exclusive OR***
-
-- Usage: #XOR dest,src
-
+### TEST - Logical Compare
+- Usage: TEST dest,src
 - Modifies flags: CF OF PF SF ZF (AF undefined)
+- Logical AND of operands updating flags but result is discarded.
 
-Performs a bitwise exclusive OR of the operands and returns the result in the destination.
+### WAIT - Wait for Test
+- Usage: WAIT
+- Modifies flags: None
+- Waits for the numeric processor's busy pin to go high.
 
-- Arguments: reg,reg mem,reg reg,mem reg,immed mem,immed accum,immed
+### XCHG - Exchange
+- Usage: XCHG dest,src
+- Modifies flags: None
+- Exchanges the contents of source and destination.
 
----
+### XLAT - Table Lookup
+- Usage: XLAT table?
+- Modifies flags: None
+- Replaces the byte in AL with the byte from the table in DS pointed to by BX and AL. If the optional table operand is used, the segment register in the operand is used instead of DS.
+
+### XOR - Logical Exclusive OR
+- Usage: XOR dest,src
+- Modifies flags: CF OF PF SF ZF (AF undefined)
+- Performs a logical exclusive OR of the two operands replacing the destination with the result.
