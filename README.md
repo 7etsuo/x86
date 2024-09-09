@@ -1,7 +1,7 @@
 ## Assembly Instructions Guide
 
-Author: **snowcra5h**  
-📧 [Email](mailto:snowcra5h@icloud.com) | 🐦 [Twitter](https://twitter.com/snowcra5h)
+Author: **7etsuo**  
+- [X.com](https://twitter.com/7etsuo)
 
 ## Contents
 1. [Abbreviations](#abbreviations)
