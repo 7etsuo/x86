@@ -1,7 +1,7 @@
 ## Assembly Instructions Guide
 
 Author: **7etsuo**  
-- https://twitter.com/7etsuo
+- https://x.com/7etsuo
 
 ## Contents
 1. [Abbreviations](#abbreviations)
